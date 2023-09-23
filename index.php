@@ -131,8 +131,6 @@
     </section>
 
    </div>
-  
-  <h2>Testing code</h2>
 
    <script>
      
