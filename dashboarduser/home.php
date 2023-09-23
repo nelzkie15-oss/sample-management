@@ -1,7 +1,7 @@
 
 <?php
    session_start();
-    require_once "../config/sample_class.php";
+    require_once "../config/Sample_class.php";
 
  if(!isset($_SESSION['logged_in'])){
        header("location:../index.php");
