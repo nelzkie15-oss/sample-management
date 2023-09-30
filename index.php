@@ -23,10 +23,36 @@
         margin-top: 10%;
       }
     </style>
+
+
+<style>
+       #loader{
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background: url('assets/loading/Dual Ring-1s-200px.png') 50% 50% no-repeat rgb(249,249,249);
+        opacity: 1;
+        }
+       
+  </style>
+    <script src="assets/js/jquery.min.js"></script>
+    <script type="text/javascript">
+      $(window).on('load', function(){
+        setTimeout(function(){
+              $('#loader').fadeOut('slow');  
+          });
+      });
+    </script>
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
   </head>
   <body>
+    <div id="loader"></div>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div class="container-fluid">
         <a class="navbar-brand" href="index">Sample Management</a>

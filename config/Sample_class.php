@@ -1,6 +1,6 @@
 <?php
 
-     require 'connection.php';
+  require 'connection.php';
 
   class sample_class {
 
@@ -34,9 +34,10 @@
     public function add_user($full_name, $address, $email, $password){
 
         $role = "User";
+        $hashpass = password_hash($password, PASSWORD_DEFAULT);
 
         $stmt = $this->pdo->prepare("INSERT INTO `tbl_users` (`full_name`, `address`, `email`, `password`, `role`) VALUES (?, ?, ?, ?, ?)");
-        $sql = $stmt->execute([$full_name, $address, $email, $password, $role]);
+        $sql = $stmt->execute([$full_name, $address, $email, $hashpass, $role]);
        
         if($sql == true){
            return true;
@@ -46,7 +47,6 @@
         }
 
     }
-
 
    // end for registration
 
@@ -74,39 +74,52 @@
 
     //end get session for admin
 
-
     // for login
 
     public function login_user($email, $password){
-
-        
+     
         session_start();
 
-
-        $stmt = $this->pdo->prepare("SELECT * FROM `tbl_users` WHERE `email` = :umail AND `password` = :upass AND `role` = :urole");
-        $stmt->execute(array(':umail' => $email,  ':upass' => $password, ':urole' => "User"));
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        $stmt1 = $this->pdo->prepare("SELECT * FROM `tbl_users` WHERE `email` = :umail AND `password` = :upass AND `role` = :urole");
-        $stmt1->execute(array(':umail' => $email,  ':upass' => $password, ':urole' => "Admin"));
+        $stmt1 = $this->pdo->prepare("SELECT user_id, password FROM tbl_users WHERE email = :uemail AND role = 'Admin'");
+        $stmt1->bindParam(':uemail', $email);
+        $stmt1->execute();
         $row1 = $stmt1->fetch(PDO::FETCH_ASSOC);
 
 
-        if($stmt->rowCount() > 0){
+        $stmt = $this->pdo->prepare("SELECT user_id, password FROM tbl_users WHERE email = :uemail AND role = 'User'");
+        $stmt->bindParam(':uemail', $email);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $_SESSION['user_id'] = $row['user_id'];
-            $_SESSION['logged_in'] = true;
 
-            echo '1';
-        }else if($stmt1->rowCount() > 0){
+           if($stmt1->rowCount() > 0){
 
-            $_SESSION['user_id2'] = $row1['user_id'];
-            $_SESSION['logged_in2'] = true;
+                      if (password_verify($password, $row1['password'])) {
+                              $_SESSION['user_id'] = htmlentities($row1['user_id']);
+                               $_SESSION['logged_in'] = true;
+                               echo '1';
 
-            echo '2';
-        }else{
+                    }else {
+                         echo "<div class='alert alert-danger'>Invalid password!</div>";
+                    }
 
-            echo "<div class='alert alert-danger' role='alert'>Incorrect Email or Password</div>";
+             }else if($stmt->rowCount() > 0){
+                        // Verify the password
+                        if (password_verify($password, $row['password'])) {
+                  
+                           $_SESSION['user_id2'] = htmlentities($row['user_id']);
+                           $_SESSION['logged_in2'] = true;
+                           echo '2';
+
+                        }else {
+                         echo "<div class='alert alert-danger'>Invalid password!</div>";
+                     }          
+                
+                exit();
+
+              }else{
+
+            echo "<div class='alert alert-warning' role='alert'>Incorrect Email or Password</div>";
         }
 
     
@@ -192,6 +205,119 @@
          }
 
    // end delete category
+
+
+         public function send_email($code, $email){
+
+              $sql = "UPDATE `tbl_users` SET `code` = ? WHERE email = ?";
+              $update = $this->pdo->prepare($sql)->execute([$code, $email]);
+              if($update == true){
+                 return true;
+              }else{
+                 return false;
+
+              }
+
+         }
+
+         public function update_password($password, $code){
+
+             $sql = "UPDATE `tbl_users` SET `password` = ?, `code` = '' WHERE code = ?";
+              $update = $this->pdo->prepare($sql)->execute([$password, $code]);
+              if($update == true){
+                 return true;
+              }else{
+                 return false;
+
+              }
+
+
+         }
+
+         //get all admin
+
+         public function getallAdmin(){
+
+                $query = $this->pdo->prepare("SELECT * FROM `tbl_admin` ORDER BY admin_id  DESC");
+                $query->execute();
+               return $query->fetchAll();
+
+         }
+
+
+         //end get all admin
+
+         ///add admin
+
+         public function add_admin($full_name, $email, $username, $password, $photo){
+
+
+              $role = "Admin";
+              $adminhashpass = password_hash($password, PASSWORD_DEFAULT);
+
+                $stmt = $this->pdo->prepare("INSERT INTO `tbl_admin` (`full_name`, `email`, `username`, `password`, `role`, `photo`)VALUES(?,?,?,?,?,?)");
+                $true = $stmt->execute([$full_name, $email, $username, $adminhashpass, $role, $photo]);
+                if($true == true){
+                   return true;
+                }else{
+                    return false;
+                }
+
+         }
+
+
+         // end add admin
+
+
+          // get row admin
+
+   public function row_admin($admin_id){
+
+    $query = $this->pdo->prepare("SELECT * FROM `tbl_admin` WHERE admin_id = ?");
+          $query->execute([$admin_id]);
+          $row = $query->fetch();
+          echo json_encode($row);
+
+   }
+
+   // end get row admin
+
+
+   //edit admin
+
+     public function edit_admin($full_name, $email, $username, $photo, $admin_id){
+
+          $sql = "UPDATE `tbl_admin` SET `full_name` = ?, `email` = ?, `username` = ?, `photo` = ? WHERE admin_id = ?";
+              $update = $this->pdo->prepare($sql)->execute([$full_name, $email, $username, $photo, $admin_id]);
+              if($update == true){
+                 return true;
+              }else{
+                 return false;
+
+              }
+
+
+     }
+
+   //end edit admin
+
+     //delete admin
+
+   public function delete_admin($admin_id){
+     
+       $query = $this->pdo->prepare("DELETE FROM `tbl_admin` WHERE admin_id = ?");
+          $del = $query->execute([$admin_id]);
+         // return $query->fetchAll();
+         if($del == true){
+                 return true;
+              }else{
+                 return false;
+
+        }
+
+   }
+
+     //end delete admin
 
 
 }

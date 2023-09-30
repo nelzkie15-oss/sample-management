@@ -1,15 +1,15 @@
 
 <?php
    session_start();
-    require_once "../config/Sample_class.php";
+    require_once "../config/sample_class.php";
 
- if(!isset($_SESSION['logged_in'])){
+ if(!isset($_SESSION['logged_in2'])){
        header("location:../index.php");
 
      }else{
 
         $conn = new sample_class();
-        $getusersessionID = trim($_SESSION['user_id']);
+        $getusersessionID = trim($_SESSION['user_id2']);
         $user = $conn->fetch_user($getusersessionID);
 
 

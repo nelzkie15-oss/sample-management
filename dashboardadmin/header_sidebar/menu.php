@@ -1,23 +1,24 @@
 <?php
    session_start();
-    require_once "../config/Sample_class.php";
+    require_once "../config/sample_class.php";
 
- if(!isset($_SESSION['logged_in2'])){
+ if(!isset($_SESSION['logged_in'])){
        header("location:../index.php");
 
      }else{
 
         $conn = new sample_class();
-        $getusersessionID = trim($_SESSION['user_id2']);
+        $getusersessionID = trim($_SESSION['user_id']);
         $admin = $conn->fetch_admin($getusersessionID);
         $getallcategory = $conn->getallcategory();
+        $getalladmin = $conn->getallAdmin();
 
 
      }
 
 
+ 
  ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -69,12 +70,17 @@
                             </a>
 
           
-
-
                             <a class="nav-link" href="category">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
                                 Category
                             </a>
+
+
+                            <a class="nav-link" href="admin">
+                                <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
+                                Admin
+                            </a>
+
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
