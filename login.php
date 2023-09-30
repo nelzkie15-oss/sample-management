@@ -222,7 +222,7 @@
                                 $('#myalert2').hide();
                                 $('#alerttext2').hide();
                                 setTimeout(function() {
-                                    window.location = '/sample-management/dashboardadmin/home.php';
+                                    window.location = '/dashboardadmin/home.php';
                                 }, 1000);
                             }  else if (data == 2) {
 
@@ -236,7 +236,7 @@
                                 $('#myalert2').hide();
                                 $('#alerttext2').hide();
                                 setTimeout(function() {
-                                    window.location = '/sample-management/dashboarduser/home.php';
+                                    window.location = '/dashboarduser/home.php';
                                 }, 1000);
                             }else {
                                 $('#myalert').slideDown();

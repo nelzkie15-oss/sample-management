@@ -22,7 +22,7 @@
             $files = addslashes(file_get_contents($_FILES['photo']['tmp_name']));
             $photo ="../uploads/". addslashes($_FILES['photo']['name']);
             $file_size =  $_FILES['photo']['size'];
-           move_uploaded_file($_FILES["photo"]["tmp_name"], $_SERVER['DOCUMENT_ROOT']."/sample-management/uploads/" .   addslashes($_FILES["photo"]["name"]));
+           move_uploaded_file($_FILES["photo"]["tmp_name"], $_SERVER['DOCUMENT_ROOT']."/uploads/" .   addslashes($_FILES["photo"]["name"]));
          }
 
         $admin_id = htmlentities(strip_tags(stripcslashes(trim($_POST['admin_id']))));
