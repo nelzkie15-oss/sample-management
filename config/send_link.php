@@ -1,6 +1,6 @@
 <?php 
 
- require_once "sample_class.php";
+ require_once "Sample_class.php";
 
     use PHPMailer\PHPMailer\PHPMailer;
     use PHPMailer\PHPMailer\SMTP;

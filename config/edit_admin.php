@@ -1,6 +1,6 @@
 <?php
   error_reporting(0);
-  require_once "sample_class.php";
+  require_once "Sample_class.php";
 
   if(ISSET($_POST)){
 
